@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Humanity OS - The Unified Rebuild Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0e27;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ANIMATED BACKGROUND */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at 20% 50%, rgba(255, 107, 53, 0.15), transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(247, 147, 30, 0.1), transparent 50%),
+                        radial-gradient(ellipse at 50% 80%, rgba(255, 205, 60, 0.08), transparent 50%);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 107, 53, 0.6);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 39, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 20px 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcd3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #ff6b35;
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            transition: transform 0.3s;
+        }
+
+        .nav-link:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.6);
+        }
+
+        /* SECTIONS */
+        section {
+            padding: 120px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcd3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 70px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* HERO SECTION */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding-top: 80px;
+        }
+
+        .hero-badge {
+            background: rgba(255, 107, 53, 0.15);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #f7931e;
+            font-weight: 600;
+            margin-bottom: 30px;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .hero-title {
+            font-size: 6rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcd3c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 2.2rem;
+            color: #f7931e;
+            margin-bottom: 30px;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .hero-description {
+            font-size: 1.4rem;
+            max-width: 950px;
+            margin: 0 auto 50px;
+            line-height: 1.9;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .btn {
+            padding: 18px 45px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: #fff;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 53, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 107, 53, 0.1);
+            color: #ff6b35;
+            border: 2px solid #ff6b35;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 107, 53, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+
+        /* PROBLEM SECTION */
+        #problem {
+            background: rgba(255, 107, 53, 0.02);
+            border-top: 1px solid rgba(255, 107, 53, 0.1);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 35px;
+            margin-top: 60px;
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.12), rgba(247, 147, 30, 0.05));
+            border: 2px solid rgba(255, 107, 53, 0.25);
+            padding: 45px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .problem-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .problem-card:hover::before {
+            opacity: 1;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: #ff6b35;
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.4);
+        }
+
+        .problem-icon {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 4px 15px rgba(255, 107, 53, 0.3));
+        }
+
+        .problem-title {
+            font-size: 2rem;
+            color: #ff6b35;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .problem-stat {
+            font-size: 3rem;
+            color: #f7931e;
+            font-weight: 900;
+            margin: 20px 0;
+            text-shadow: 0 2px 10px rgba(247, 147, 30, 0.3);
+        }
+
+        .problem-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* VISION SECTION */
+        #vision {
+            text-align: center;
+            padding: 150px 40px;
+            position: relative;
+        }
+
+        .vision-quote {
+            font-size: 2.8rem;
+            font-weight: 300;
+            line-height: 1.7;
+            max-width: 1100px;
+            margin: 0 auto 50px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .vision-highlight {
+            color: #ff6b35;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .vision-answer {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcd3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 40px;
+            letter-spacing: -1px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        /* PILLARS SECTION */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 45px;
+            margin-top: 70px;
+        }
+
+        .pillar-card {
+            background: linear-gradient(145deg, rgba(255, 107, 53, 0.12), rgba(247, 147, 30, 0.05));
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            padding: 50px;
+            border-radius: 25px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.1), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .pillar-card:hover::after {
+            opacity: 1;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-20px) scale(1.02);
+            border-color: #ff6b35;
+            box-shadow: 0 25px 70px rgba(255, 107, 53, 0.5);
+        }
+
+        .pillar-icon {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            display: inline-block;
+            filter: drop-shadow(0 5px 20px rgba(255, 107, 53, 0.4));
+        }
+
+        .pillar-title {
+            font-size: 2.2rem;
+            color: #ff6b35;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .pillar-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pillar-list li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.08rem;
+            transition: all 0.3s;
+        }
+
+        .pillar-list li:hover {
+            padding-left: 10px;
+            color: #f7931e;
+        }
+
+        .pillar-list li:before {
+            content: "▸ ";
+            color: #f7931e;
+            font-weight: 900;
+            margin-right: 12px;
+        }
+
+        /* HOW IT WORKS */
+        #howitworks {
+            background: rgba(255, 107, 53, 0.02);
+        }
+
+        .flow-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin: 70px 0;
+        }
+
+        .flow-step {
+            text-align: center;
+            padding: 40px 30px;
+            background: linear-gradient(145deg, rgba(255, 107, 53, 0.1), rgba(247, 147, 30, 0.05));
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-radius: 20px;
+            position: relative;
+            transition: all 0.4s;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-10px);
+            border-color: #ff6b35;
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
+        }
+
+        .flow-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .flow-title {
+            font-size: 1.5rem;
+            color: #ff6b35;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .flow-step p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(247, 147, 30, 0.08));
+            border-left: 5px solid #f7931e;
+            padding: 35px;
+            margin: 40px 0;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .example-box:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.3);
+        }
+
+        .example-title {
+            color: #ff6b35;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .example-box p {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* LIVE PREVIEW */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+            margin-top: 60px;
+        }
+
+        .score-card {
+            background: linear-gradient(145deg, rgba(255, 107, 53, 0.18), rgba(247, 147, 30, 0.1));
+            border: 2px solid rgba(255, 107, 53, 0.4);
+            padding: 50px 40px;
+            border-radius: 25px;
+            text-align: center;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .score-card:hover::before {
+            left: 100%;
+        }
+
+        .score-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: #ff6b35;
+            box-shadow: 0 20px 50px rgba(255, 107, 53, 0.5);
+        }
+
+        .score-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 15px rgba(255, 107, 53, 0.4));
+        }
+
+        .score-value {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+        }
+
+        .score-label {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.75);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* STORY MODE */
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 35px;
+            margin-top: 60px;
+        }
+
+        .story-card {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(247, 147, 30, 0.05));
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            padding: 40px;
+            border-radius: 20px;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 0;
+            background: linear-gradient(180deg, #ff6b35, #f7931e);
+            transition: height 0.4s;
+        }
+
+        .story-card:hover::before {
+            height: 100%;
+        }
+
+        .story-card:hover {
+            border-color: #ff6b35;
+            transform: translateY(-12px);
+            box-shadow: 0 15px 45px rgba(255, 107, 53, 0.4);
+        }
+
+        .story-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #f7931e;
+            margin-bottom: 20px;
+        }
+
+        .story-title {
+            font-size: 2rem;
+            color: #ff6b35;
+            margin-bottom: 18px;
+            font-weight: 700;
+        }
+
+        .story-text {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* FEATURES */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.08), rgba(247, 147, 30, 0.03));
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            padding: 40px;
+            border-radius: 18px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(247, 147, 30, 0.08));
+            border-color: #ff6b35;
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(255, 107, 53, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            color: #ff6b35;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            font-size: 1.02rem;
+        }
+
+        /* USE CASES */
+        #usecases {
+            background: rgba(255, 107, 53, 0.02);
+        }
+
+        .usecase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 35px;
+            margin-top: 60px;
+        }
+
+        .usecase-card {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(247, 147, 30, 0.05));
+            border-left: 6px solid #f7931e;
+            padding: 40px;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .usecase-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 12px 40px rgba(255, 107, 53, 0.3);
+            border-left-width: 8px;
+        }
+
+        .usecase-title {
+            font-size: 1.6rem;
+            color: #ff6b35;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .usecase-text {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* TECH STACK */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 60px;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.12), rgba(247, 147, 30, 0.06));
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            padding: 30px 25px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 700;
+            color: #f7931e;
+            transition: all 0.3s;
+            font-size: 1.05rem;
+        }
+
+        .tech-item:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(247, 147, 30, 0.12));
+            transform: scale(1.08) rotate(2deg);
+            border-color: #ff6b35;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        /* SCALABILITY */
+        #scalability {
+            background: rgba(255, 107, 53, 0.02);
+        }
+
+        .future-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .future-card {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.12), rgba(247, 147, 30, 0.05));
+            border: 2px dashed rgba(255, 107, 53, 0.4);
+            padding: 40px 35px;
+            border-radius: 18px;
+            text-align: center;
+            transition: all 0.4s;
+        }
+
+        .future-card:hover {
+            border-style: solid;
+            border-color: #ff6b35;
+            transform: translateY(-10px);
+            box-shadow: 0 15px 45px rgba(255, 107, 53, 0.4);
+        }
+
+        .future-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            filter: drop-shadow(0 4px 12px rgba(255, 107, 53, 0.3));
+        }
+
+        .future-title {
+            font-size: 1.5rem;
+            color: #ff6b35;
+            font-weight: 700;
+        }
+
+        /* CTA */
+        #cta {
+            text-align: center;
+            padding: 150px 40px;
+            background: radial-gradient(ellipse at center, rgba(255, 107, 53, 0.25), transparent);
+        }
+
+        .cta-quote {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcd3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.3;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* FOOTER */
+        footer {
+            background: rgba(10, 14, 39, 0.95);
+            padding: 60px 40px;
+            text-align: center;
+            border-top: 2px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 20px 0;
+            font-size: 1.05rem;
+        }
+
+        .team-members {
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 30px;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #ff6b35;
+        }
+
+        /* MOBILE MENU */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #ff6b35;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .hero-title { font-size: 4.5rem; }
+            .section-title { font-size: 2.8rem; }
+            .pillars-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 3rem; }
+            .hero-subtitle { font-size: 1.5rem; }
+            .section-title { font-size: 2.2rem; }
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .hero-stats { gap: 30px; }
+            .flow-container { grid-template-columns: 1fr; }
+            .btn { padding: 15px 35px; }
+        }
+
+        /* SCROLL ANIMATIONS */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">🌍</div>
+                HUMANITY OS
+            </div>
+            <div class="nav-links">
+                <a href="#hero" class="nav-link">Home</a>
+                <a href="#problem" class="nav-link">Problem</a>
+                <a href="#pillars" class="nav-link">Features</a>
+                <a href="#preview" class="nav-link">Dashboard</a>
+                <a href="#story" class="nav-link">Story</a>
+                <a href="getstarted.html" class="nav-link nav-cta">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO SECTION -->
+    <section id="hero">
+        <div class="hero-badge">🚀 Infernoverse Hackathon Project 2025 @ LPU</div>
+        <h1 class="hero-title">HUMANITY OS</h1>
+        <h2 class="hero-subtitle">The Unified Rebuild Dashboard</h2>
+        <p class="hero-description">
+            A revolutionary platform connecting sustainability, safety, and emotional resilience into one intelligent crisis-recovery ecosystem. Monitor, analyze, and respond to global challenges in real-time.
+        </p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="document.getElementById('preview').scrollIntoView({behavior:'smooth'})">
+                🎯 Enter Dashboard
+            </button>
+            <button class="btn btn-secondary" onclick="document.getElementById('story').scrollIntoView({behavior:'smooth'})">
+                📖 Explore Story
+            </button>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-number">3</div>
+                <div class="hero-stat-label">Core Pillars</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">2.4M</div>
+                <div class="hero-stat-label">Users Protected</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">24/7</div>
+                <div class="hero-stat-label">Real-Time Monitoring</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. PROBLEM SECTION -->
+    <section id="problem">
+        <h2 class="section-title">Why We Built This</h2>
+        <p class="section-subtitle">"These crises are interconnected — but our systems are not."</p>
+        
+        <div class="problem-grid">
+            <div class="problem-card fade-in">
+                <div class="problem-icon">🌍
+                <a href="climate.html" class="problem-title">Climate Systems Collapsing</a></div>
+                <div class="problem-stat">+1.5°C</div>
+                <p class="problem-text">Global temperatures rising faster than predicted. Extreme weather events increasing by 40% in the last decade, threatening ecosystems worldwide.</p>
+            </div>
+            <div class="problem-card fade-in">
+                <div class="problem-icon">⚠️
+                    <a href="disaster.html" class="problem-title">Disaster Risk Rising</a>
+                </div>
+                <div class="problem-stat">350M+</div>
+                <p class="problem-text">People affected by natural disasters annually. Infrastructure failing under unprecedented climate stress and emergency response systems overwhelmed.</p>
+            </div>
+            <div class="problem-card fade-in">
+                <div class="problem-icon">💔
+                    <a href="mental.html" class="problem-title">Mental Health Declining</a></div>
+                <div class="problem-stat">1 in 4</div>
+                <p class="problem-text">Adults experiencing mental health issues. Climate anxiety and crisis fatigue at all-time highs, with limited integrated support systems.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. VISION SECTION -->
+    <section id="vision">
+        <p class="vision-quote">
+            If <span class="vision-highlight">humanity had to reboot today</span>, what system would guide our recovery?
+        </p>
+        <div class="vision-answer">HUMANITY OS</div>
+        <p class="section-subtitle" style="margin-top: 40px;">
+            A unified platform that treats planetary health, human safety, and emotional wellbeing as one interconnected system.
+        </p>
+    </section>
+
+    <!-- 4. THE 3 CORE PILLARS -->
+    <section id="pillars">
+        <h2 class="section-title">The 3 Core Pillars</h2>
+        <p class="section-subtitle">What we monitor to rebuild humanity</p>
+        
+        <div class="pillars-grid">
+            <div class="pillar-card fade-in">
+                <div class="pillar-icon">🌍</div>
+                <div class="pillar-title">Planet Stability</div>
+                <ul class="pillar-list">
+                    <li>Carbon Load Monitoring</li>
+                    <li>Water Stress Analysis</li>
+                    <li>Air Quality Tracking</li>
+                    <li>Biodiversity Risk Assessment</li>
+                    <li>Renewable Energy Adoption</li>
+                    <li>Ecosystem Health Metrics</li>
+                </ul>
+            </div>
+            <div class="pillar-card fade-in">
+                <div class="pillar-icon">🛡️</div>
+                <div class="pillar-title">Human Safety</div>
+                <ul class="pillar-list">
+                    <li>Disaster Early Warnings</li>
+                    <li>Infrastructure Vulnerability</li>
+                    <li>Heatwave & Flood Alerts</li>
+                    <li>Crisis Triage System</li>
+                    <li>Emergency Response Coordination</li>
+                    <li>Resource Distribution Mapping</li>
+                </ul>
+            </div>
+            <div class="pillar-card fade-in">
+                <div class="pillar-icon">💙</div>
+                <div class="pillar-title">Human Pulse</div>
+                <ul class="pillar-list">
+                    <li>Community Mood Analytics</li>
+                    <li>Burnout Hotspot Detection</li>
+                    <li>Stress Pattern Recognition</li>
+                    <li>Resilience Recommendations</li>
+                    <li>Mental Health Resource Mapping</li>
+                    <li>Social Support Network Analysis</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. HOW IT WORKS -->
+    <section id="howitworks">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">The intelligence behind the integration</p>
+        
+        <div class="flow-container">
+            <div class="flow-step fade-in">
+                <div class="flow-number">01</div>
+                <div class="flow-title">Data Streams</div>
+                <p>Multi-source data collection from environmental sensors, safety systems, and community feedback channels</p>
+            </div>
+            <div class="flow-step fade-in">
+                <div class="flow-number">02</div>
+                <div class="flow-title">AI Analysis</div>
+                <p>Advanced pattern recognition and correlation analysis to identify interconnected risks</p>
+            </div>
+            <div class="flow-step fade-in">
+                <div class="flow-number">03</div>
+                <div class="flow-title">Unified Dashboard</div>
+                <p>Single comprehensive view integrating all three pillars into actionable insights</p>
+            </div>
+            <div class="flow-step fade-in">
+                <div class="flow-number">04</div>
+                <div class="flow-title">Action Plans</div>
+                <p>Smart, prioritized recommendations delivered to relevant stakeholders in real-time</p>
+            </div>
+        </div>
+
+        <div class="example-box fade-in">
+            <div class="example-title">🔗 Integration Example 1: Air Quality Crisis</div>
+            <p>When air pollution rises → System triggers emotional stress alerts → Recommends indoor activities and mental health resources → Updates health facility capacity → Activates public transit alternatives</p>
+        </div>
+
+        <div class="example-box fade-in">
+            <div class="example-title">🔗 Integration Example 2: Extreme Heat Event</div>
+            <p>Heatwave detected → Safety alerts activated across all channels → Water conservation prompts sent to communities → Mental health support resources shared → Cooling center locations distributed</p>
+        </div>
+    </section>
+
+    <!-- 6. LIVE PREVIEW -->
+    <section id="preview">
+        <h2 class="section-title">Live Dashboard Preview</h2>
+        <p class="section-subtitle">Real-time global resilience scores and monitoring</p>
+        
+        <div class="preview-grid">
+            <div class="score-card fade-in">
+                <div class="score-icon">🌍</div>
+                <div class="score-value" data-target="72">0</div>
+                <div class="score-label">Planet Health Score</div>
+            </div>
+            <div class="score-card fade-in">
+                <div class="score-icon">🛡️</div>
+                <div class="score-value" data-target="58">0</div>
+                <div class="score-label">Global Risk Index</div>
+            </div>
+            <div class="score-card fade-in">
+                <div class="score-icon">💙</div>
+                <div class="score-value" data-target="64">0</div>
+                <div class="score-label">Emotional Resilience</div>
+            </div>
+            <div class="score-card fade-in">
+                <div class="score-icon">📊</div>
+                <div class="score-value" data-target="2400000">0</div>
+                <div class="score-label">Users Protected</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. STORY MODE -->
+    <section id="story">
+        <h2 class="section-title">The Reboot Sequence</h2>
+        <p class="section-subtitle">How Humanity OS guides recovery from crisis to resilience</p>
+        
+        <div class="story-grid">
+            <div class="story-card fade-in">
+                <div class="story-number">01</div>
+                <div class="story-title">BREAKDOWN</div>
+                <p class="story-text">Climate systems failing. Disasters increasing. Mental health crisis. Humanity at a breaking point with fragmented response systems unable to cope.</p>
+            </div>
+            <div class="story-card fade-in">
+                <div class="story-number">02</div>
+                <div class="story-title">INSIGHT</div>
+                <p class="story-text">Crises are connected, but our response systems are isolated. Data silos prevent effective crisis management and holistic solutions.</p>
+            </div>
+            <div class="story-card fade-in">
+                <div class="story-number">03</div>
+                <div class="story-title">REBOOT</div>
+                <p class="story-text">Humanity OS unifies all critical systems. One platform connects environmental, safety, and emotional data for comprehensive crisis response.</p>
+            </div>
+            <div class="story-card fade-in">
+                <div class="story-number">04</div>
+                <div class="story-title">REBUILD</div>
+                <p class="story-text">Clear action steps emerge. Communities receive precise guidance. Humanity rebuilds with intelligence, resilience, and interconnected support systems.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. FEATURES -->
+    <section id="features">
+        <h2 class="section-title">What The OS Can Do</h2>
+        <p class="section-subtitle">Powerful features for comprehensive crisis management</p>
+        
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Predictive Risk Alerts</div>
+                <p>AI-powered forecasting identifies crises before they escalate, enabling proactive intervention and resource preparation.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🗺️</div>
+                <div class="feature-title">Emotional Stress Mapping</div>
+                <p>Track community mental health hotspots in real-time, connecting vulnerable populations with support resources.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🌡️</div>
+                <div class="feature-title">Environmental Anomaly Detection</div>
+                <p>Instant alerts for pollution spikes, temperature extremes, and climate events with detailed impact analysis.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🤝</div>
+                <div class="feature-title">Resource Recommendations</div>
+                <p>Connect people with help: emergency shelters, mental health support, medical facilities, and community aid.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🚨</div>
+                <div class="feature-title">Real-Time Triage</div>
+                <p>Prioritize emergency responses based on integrated data from all three pillars for maximum impact.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">📍</div>
+                <div class="feature-title">Interactive Risk Map</div>
+                <p>Visual dashboard showing all threats by location with layered data visualization and drill-down capabilities.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. USE CASES -->
+    <section id="usecases">
+        <h2 class="section-title">Who Will Use This?</h2>
+        <p class="section-subtitle">Real-world applications across sectors and industries</p>
+        
+        <div class="usecase-grid">
+            <div class="usecase-card fade-in">
+                <div class="usecase-title">🏛️ Governments</div>
+                <p class="usecase-text">Centralized crisis monitoring and evidence-based policy-making support for national resilience planning and disaster preparedness.</p>
+            </div>
+            <div class="usecase-card fade-in">
+                <div class="usecase-title">🚒 Disaster Management Teams</div>
+                <p class="usecase-text">Real-time coordination tools for emergency response, resource allocation, and multi-agency collaboration during active crises.</p>
+            </div>
+            <div class="usecase-card fade-in">
+                <div class="usecase-title">🌱 NGO & Relief Organizations</div>
+                <p class="usecase-text">Data-driven insights to target humanitarian aid effectively, measure impact, and optimize resource distribution.</p>
+            </div>
+            <div class="usecase-card fade-in">
+                <div class="usecase-title">🔬 Climate Researchers</div>
+                <p class="usecase-text">Integrated environmental data streams for comprehensive climate impact studies and predictive modeling.</p>
+            </div>
+            <div class="usecase-card fade-in">
+                <div class="usecase-title">🏥 Healthcare Systems</div>
+                <p class="usecase-text">Mental health trend monitoring, capacity planning, and crisis-related healthcare demand forecasting.</p>
+            </div>
+            <div class="usecase-card fade-in">
+                <div class="usecase-title">🏙️ Smart Cities</div>
+                <p class="usecase-text">Urban resilience monitoring, citizen wellbeing tracking, and sustainable city management infrastructure.</p>
+            </div>
+            <div class="usecase-card fade-in">
+                <div class="usecase-title">🎓 Universities</div>
+                <p class="usecase-text">Research platform for studying interconnected global crises, developing solutions, and training future crisis managers.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. TECH STACK -->
+    <section id="techstack">
+        <h2 class="section-title">Architecture & Tech Stack</h2>
+        <p class="section-subtitle">Built for scalability, reliability, and real-time performance</p>
+        
+        <div class="tech-grid">
+            <div class="tech-item fade-in">React / Next.js</div>
+            <div class="tech-item fade-in">Node.js Backend</div>
+            <div class="tech-item fade-in">PostgreSQL</div>
+            <div class="tech-item fade-in">MongoDB</div>
+            <div class="tech-item fade-in">Python AI/ML</div>
+            <div class="tech-item fade-in">TensorFlow</div>
+            <div class="tech-item fade-in">Mapbox API</div>
+            <div class="tech-item fade-in">Weather APIs</div>
+            <div class="tech-item fade-in">Sentiment Analysis</div>
+            <div class="tech-item fade-in">WebSocket</div>
+            <div class="tech-item fade-in">Docker</div>
+            <div class="tech-item fade-in">Kubernetes</div>
+            <div class="tech-item fade-in">AWS / Azure</div>
+            <div class="tech-item fade-in">GraphQL</div>
+            <div class="tech-item fade-in">Redis Cache</div>
+        </div>
+    </section>
+
+    <!-- 11. SCALABILITY -->
+    <section id="scalability">
+        <h2 class="section-title">Future Scalability</h2>
+        <p class="section-subtitle">Expanding the platform's capabilities for comprehensive global coverage</p>
+        
+        <div class="future-grid">
+            <div class="future-card fade-in">
+                <div class="future-icon">⚡</div>
+                <div class="future-title">Energy Grid Health</div>
+            </div>
+            <div class="future-card fade-in">
+                <div class="future-icon">🏥</div>
+                <div class="future-title">Healthcare Stress Index</div>
+            </div>
+            <div class="future-card fade-in">
+                <div class="future-icon">📚</div>
+                <div class="future-title">Education Stability Index</div>
+            </div>
+            <div class="future-card fade-in">
+                <div class="future-icon">🌾</div>
+                <div class="future-title">Food Security Module</div>
+            </div>
+            <div class="future-card fade-in">
+                <div class="future-icon">💰</div>
+                <div class="future-title">Economic Resilience</div>
+            </div>
+            <div class="future-card fade-in">
+                <div class="future-icon">🚰</div>
+                <div class="future-title">Water Resource Management</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12. CALL TO ACTION -->
+    <section id="cta">
+        <div class="cta-quote">Join the mission to reboot humanity.</div>
+        <p class="section-subtitle">Be part of the unified recovery system for a resilient future.</p>
+        <div class="cta-buttons">
+            <button class="btn btn-primary" onclick="alert('🎯 Dashboard Demo Coming Soon! Full interactive version launching after hackathon.')">
+                🚀 Try Dashboard
+            </button>
+            <button class="btn btn-secondary" onclick="alert('📊 Prototype Download: Complete functional demo with all features available for review.')">
+                📥 View Prototype
+            </button>
+            <button class="btn btn-secondary" onclick="alert('📑 Pitch Deck: Comprehensive presentation with technical architecture and business model.')">
+                📄 Download Pitch
+            </button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">HUMANITY OS</div>
+            <p class="footer-text">Building the unified rebuild dashboard for a resilient future</p>
+            
+            <div class="footer-links">
+                <a href="#" class="footer-link">About</a>
+                <a href="#" class="footer-link">Documentation</a>
+                <a href="#" class="footer-link">GitHub</a>
+                <a href="#" class="footer-link">API</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+
+            <div class="team-members">
+                <p><strong>🏆 Matrix Maker's Team 2024</strong></p>
+                <p>Contact: amanpandey10a3@gmail.com</p>
+                <p style="margin-top: 20px; font-size: 0.9rem;">© 2025 Humanity OS. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Create animated particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Animate score values
+        const animateValue = (element, start, end, duration) => {
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                
+                if (end > 1000000) {
+                    element.textContent = (current / 1000000).toFixed(1) + 'M';
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 16);
+        };
+
+        const scoreObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseInt(entry.target.dataset.target);
+                    animateValue(entry.target, 0, target, 2000);
+                    scoreObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.score-value').forEach(el => scoreObserver.observe(el));
+
+        // Mobile menu toggle
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileBtn?.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            navLinks.style.flexDirection = 'column';
+            navLinks.style.position = 'absolute';
+            navLinks.style.top = '70px';
+            navLinks.style.right = '20px';
+            navLinks.style.background = 'rgba(10, 14, 39, 0.98)';
+            navLinks.style.padding = '20px';
+            navLinks.style.borderRadius = '10px';
+            navLinks.style.border = '1px solid rgba(255, 107, 53, 0.3)';
+        });
+    </script>
+</body>
+</html>

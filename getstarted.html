@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Get Started — Humanity OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- GOOGLE FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ===================== GLOBAL UI ===================== */
+:root{
+    --bg:#0f1724; --card:#0b1220; --muted:#9aa6b2;
+    --accent:#00e5a8; --accent2:#7fd3ff;
+    --font:'Poppins', sans-serif;
+}
+
+*{margin:0; padding:0; box-sizing:border-box;}
+
+body{
+    background:linear-gradient(180deg,#061021,#081426);
+    font-family:var(--font);
+    color:#e8f5ff;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* ===================== CARD ===================== */
+.card{
+    width:380px;
+    padding:32px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:18px;
+    backdrop-filter:blur(8px);
+    box-shadow:0 0 40px rgba(0,229,168,0.20);
+    display:none;
+    animation:fade .7s ease;
+}
+
+@keyframes fade{
+    from {opacity:0; transform:translateY(15px);}
+    to   {opacity:1; transform:translateY(0);}
+}
+
+.active { display:block; }
+
+h2{
+    font-size:28px;
+    font-weight:900;
+    text-align:center;
+    margin-bottom:18px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    margin:10px 0;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.03);
+    color:#e8f5ff;
+    font-size:15px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    border:none;
+    border-radius:12px;
+    margin-top:14px;
+    color:#012;
+    font-weight:900;
+    cursor:pointer;
+    font-size:16px;
+    box-shadow:0 10px 30px rgba(0,229,168,0.22);
+    transition:.2s;
+}
+
+button:hover{ transform:translateY(-4px); }
+
+.extra-links{
+    text-align:center;
+    margin-top:12px;
+}
+
+a{ color:var(--accent2); cursor:pointer; text-decoration:none; }
+
+/* ===================== DASHBOARD ===================== */
+
+.dash-title{
+    font-size:32px;
+    font-weight:900;
+    text-align:center;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:20px;
+}
+
+.modules{
+    margin-top:25px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:15px;
+}
+
+.module-card{
+    padding:20px;
+    text-align:center;
+    border-radius:14px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    transition:.25s;
+    cursor:pointer;
+}
+
+.module-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 10px 30px rgba(0,229,168,0.3);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =============== LOGIN PAGE =============== -->
+<div class="card active" id="loginPage">
+    <h2>Login</h2>
+
+    <input id="loginEmail" type="email" placeholder="Email">
+    <input id="loginPass" type="password" placeholder="Password">
+
+    <button onclick="loginUser()">Login</button>
+
+    <div class="extra-links">
+        <a onclick="showPage('forgotPage')">Forgot Password?</a><br><br>
+        <a onclick="showPage('signupPage')">Create an account</a>
+    </div>
+</div>
+
+<!-- =============== SIGNUP PAGE =============== -->
+<div class="card" id="signupPage">
+    <h2>Create Account</h2>
+
+    <input id="name" type="text" placeholder="Full Name">
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="registerUser()">Sign Up</button>
+
+    <div class="extra-links">
+        <a onclick="showPage('loginPage')">Already have an account?</a>
+    </div>
+</div>
+
+<!-- =============== FORGOT PASSWORD PAGE =============== -->
+<div class="card" id="forgotPage">
+    <h2>Reset Password</h2>
+
+    <input id="resetEmail" type="email" placeholder="Enter your email">
+
+    <button onclick="resetPassword()">Send Reset Link</button>
+
+    <div class="extra-links">
+        <a onclick="showPage('loginPage')">Back to login</a>
+    </div>
+</div>
+
+<!-- =============== DASHBOARD PAGE =============== -->
+<div class="card" id="dashboardPage">
+    <h2 class="dash-title">Welcome, <span id="uname">User</span> 🌍</h2>
+
+    <p style="text-align:center;color:var(--muted);">Your Humanity OS Dashboard</p>
+
+    <div class="modules">
+        <div class="module-card" onclick="location.href='index.html#hearthline'">Hearthline</div>
+        <div class="module-card" onclick="location.href='index.html#ecopulse'">EcoPulse</div>
+        <div class="module-card" onclick="location.href='index.html#neuracare'">NeuraCare</div>
+        <div class="module-card" onclick="location.href='index.html#truthline'">TruthLine</div>
+    </div>
+
+    <button style="margin-top:25px;" onclick="logout()">Logout</button>
+</div>
+
+
+<!-- ==================== SCRIPT ==================== -->
+<script>
+/* SWITCH PAGES */
+function showPage(id){
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+/* SIGNUP */
+function registerUser(){
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+
+    if(!name || !email || !pass){
+        alert("Please fill all fields.");
+        return;
+    }
+
+    localStorage.setItem("humanityUser", JSON.stringify({name,email,pass}));
+    alert("Account created!");
+    showPage("loginPage");
+}
+
+/* LOGIN */
+function loginUser(){
+    const email = document.getElementById("loginEmail").value;
+    const pass = document.getElementById("loginPass").value;
+
+    const stored = JSON.parse(localStorage.getItem("humanityUser"));
+
+    if(!stored){
+        alert("No account found. Please sign up.");
+        return;
+    }
+
+    if(email === stored.email && pass === stored.pass){
+        document.getElementById("uname").innerText = stored.name;
+        showPage("dashboardPage");
+    } else {
+        alert("Wrong credentials.");
+    }
+}
+
+/* RESET PASSWORD */
+function resetPassword(){
+    const email = document.getElementById("resetEmail").value;
+    const stored = JSON.parse(localStorage.getItem("humanityUser"));
+
+    if(!stored){ alert("No account found."); return; }
+    if(email !== stored.email){ alert("Email not registered."); return; }
+
+    alert("Password reset link sent! (Demo)");
+}
+
+/* LOGOUT */
+function logout(){
+    showPage("loginPage");
+}
+</script>
+
+</body>
+</html>
